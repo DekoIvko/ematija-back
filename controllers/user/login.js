@@ -1,0 +1,58 @@
+const User = require("../../model/UserSchema");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+const login = function (req, res) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const { email, password } = req?.body;
+      if (!email || !password) {
+        resolve({ message: "Email and password required!", status: 400 }); // 400 bed request
+      }
+      const foundUser = await User.findOne({ email: email }).exec();
+
+      if (foundUser?.email) {
+        // compare password with encrypted password
+        const matchPasswords = await bcrypt.compare(password, foundUser?.password);
+
+        if (!matchPasswords) {
+          resolve({ message: "Invalid password", status: 400 });
+        } else {
+          const accessToken = jwt.sign({ username: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" });
+          const refreshToken = jwt.sign({ username: email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
+          foundUser.refreshToken = refreshToken;
+
+          const result = await foundUser.save();
+
+          // Creates Secure Cookie with refresh token
+          res.cookie("jwt", refreshToken, { httpOnly: true, sameSite: "None", secure: true, maxAge: 24 * 60 * 60 * 1000 }); // jwt refresh token 24 hours
+          const data = {
+            email: result.email,
+            firstName: result.firstName,
+            lastName: result.lastName,
+            image: result.image,
+            accessToken,
+          };
+
+          resolve({ message: "Successfully Sign In", data, status: 200 });
+        }
+      } else {
+        resolve({ message: "Invalid email or password", status: 400 });
+      }
+    } catch (err) {
+      reject(err.toString());
+    }
+  });
+};
+
+module.exports = {
+  ServiceCall: async function (req, res) {
+    try {
+      const loginConfirm = await login(req, res);
+      res.type("application/json").status(200).send(loginConfirm);
+    } catch (err) {
+      res.type("application/json").status(500).send(err);
+    }
+  },
+};
