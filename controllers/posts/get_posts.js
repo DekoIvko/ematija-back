@@ -3,7 +3,8 @@ const Post = require("../../model/PostSchema");
 const get_posts = function (req, res) {
   return new Promise(async function (resolve, reject) {
     try {
-      const posts = await Post.find({}).exec();
+      const param = await req?.query?.id;
+      const posts = param ? await Post.find({ userId: parseInt(param) }).exec() : await Post.find({}).exec();
       if (posts) resolve(posts);
     } catch (err) {
       reject(err.toString());

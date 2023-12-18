@@ -4,19 +4,25 @@ const bcrypt = require("bcrypt");
 const register = function (req, res) {
   return new Promise(async function (resolve, reject) {
     try {
-      const { firstName, lastName, email, image, password } = req?.body;
+      const { username, firstName, lastName, email, image, birthDate, gender, password } = req?.body;
       const foundUser = await User.findOne({ email: email }).exec();
+      const counterUsers = await User.find({}).exec();
 
-      if (foundUser && foundUser.email) {
-        resolve({ message: "User already exist!", data: {}, status: 409 }); // 409 conflicts
+      if (email.toLowerCase() === foundUser?.email.toLowerCase()) {
+        res.type("application/json").status(409).send({ message: "User already exist!" });
       } else {
         // encrypt the password
         const hashedPassword = await bcrypt.hash(password, 10);
+        // add user to database
         await User.create({
+          id: counterUsers.length++,
+          username: username,
           email: email,
           password: hashedPassword,
           firstName: firstName,
           lastName: lastName,
+          birthDate: birthDate,
+          gender: gender,
           image: image,
         });
 

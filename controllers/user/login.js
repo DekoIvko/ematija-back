@@ -8,18 +8,18 @@ const login = function (req, res) {
     try {
       const { email, password } = req?.body;
       if (!email || !password) {
-        resolve({ message: "Email and password required!", status: 400 }); // 400 bed request
+        // resolve({ message: "Email and password required!", status: 400 }); // 400 bed request
+        res.type("application/json").status(400).send({ message: "Email and password required!" });
       }
       const foundUser = await User.findOne({ email: email }).exec();
 
       if (foundUser?.email) {
-        // compare password with encrypted password
         const matchPasswords = await bcrypt.compare(password, foundUser?.password);
 
         if (!matchPasswords) {
-          resolve({ message: "Invalid password", status: 400 });
+          res.type("application/json").status(400).send({ message: "Invalid password!" });
         } else {
-          const accessToken = jwt.sign({ username: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" });
+          const accessToken = jwt.sign({ username: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "2h" });
           const refreshToken = jwt.sign({ username: email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" });
           foundUser.refreshToken = refreshToken;
 
@@ -28,6 +28,7 @@ const login = function (req, res) {
           // Creates Secure Cookie with refresh token
           res.cookie("jwt", refreshToken, { httpOnly: true, sameSite: "None", secure: true, maxAge: 24 * 60 * 60 * 1000 }); // jwt refresh token 24 hours
           const data = {
+            id: result.id,
             email: result.email,
             firstName: result.firstName,
             lastName: result.lastName,
