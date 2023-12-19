@@ -7,7 +7,7 @@ const register = function (req, res) {
       const { username, firstName, lastName, email, image, birthDate, gender, password } = req?.body;
       const foundUser = await User.findOne({ email: email }).exec();
       const counterUsers = await User.find({}).exec();
-
+      console.log(counterUsers.length++);
       if (email.toLowerCase() === foundUser?.email.toLowerCase()) {
         res.type("application/json").status(409).send({ message: "User already exist!" });
       } else {

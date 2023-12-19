@@ -3,9 +3,13 @@ const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
   id: Number,
+  postId: Number,
   title: String,
   body: String,
-  userId: Number,
+  user: {
+    id: Number,
+    username: String,
+  },
   tags: [],
   reactions: [],
 });
