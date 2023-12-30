@@ -5,7 +5,7 @@ const get_posts = function (req, res) {
     try {
       const param = await req?.query?.id;
       const posts = param ? await Post.find({ userId: parseInt(param) }).exec() : await Post.find({}).exec();
-      if (posts) resolve(posts);
+      if (posts) resolve(posts.toReversed());
     } catch (err) {
       reject(err.toString());
     }

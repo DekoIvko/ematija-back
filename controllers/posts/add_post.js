@@ -3,9 +3,9 @@ const Post = require("../../model/PostSchema");
 const add_post = function (req, res) {
   return new Promise(async function (resolve, reject) {
     try {
-      const posts = await Post.find({}).exec();
+      const postLength = await Post.find().exec();
       const newPost = await Post.create({
-        id: posts.length++,
+        id: postLength.length++,
         title: req.body.title,
         body: req.body.body,
         userId: req.body.userId,

@@ -4,7 +4,8 @@ const verifyJWT = require("../../middleware/verifyAuth");
 
 // controllers
 const get_posts = require("../../controllers/posts/get_posts");
-const add_feed = require("../../controllers/posts/add_post");
+const add_post = require("../../controllers/posts/add_post");
+const remove_post = require("../../controllers/posts/remove_post");
 
 module.exports = () => {
   const app = express.Router();
@@ -16,7 +17,11 @@ module.exports = () => {
   });
 
   app.post("/add", verifyJWT, (req, res) => {
-    add_feed.ServiceCall(req, res);
+    add_post.ServiceCall(req, res);
+  });
+
+  app.get("/remove", verifyJWT, (req, res) => {
+    remove_post.ServiceCall(req, res);
   });
 
   return app;

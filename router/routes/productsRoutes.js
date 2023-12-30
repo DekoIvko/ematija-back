@@ -4,6 +4,7 @@ const verifyJWT = require("../../middleware/verifyAuth");
 
 // controllers
 const get_products = require("../../controllers/products/get_products");
+const search_products = require("../../controllers/products/search_products");
 const add_products = require("../../controllers/products/add_product");
 
 module.exports = () => {
@@ -15,7 +16,11 @@ module.exports = () => {
     get_products.ServiceCall(req, res);
   });
 
-  app.get("/add", verifyJWT, (req, res) => {
+  app.get("/search", verifyJWT, (req, res) => {
+    search_products.ServiceCall(req, res);
+  });
+
+  app.post("/add", verifyJWT, (req, res) => {
     add_products.ServiceCall(req, res);
   });
 
