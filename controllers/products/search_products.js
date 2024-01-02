@@ -4,8 +4,7 @@ const search_products = function (req, res) {
   return new Promise(async function (resolve, reject) {
     try {
       const { category, search } = req.query;
-      console.log(category, search);
-      const products = await Product.find({ category: category || "", title: search || "" }).exec();
+      const products = await Product.find({ title: { $regex: search, $options: "i" }, category: { $regex: category, $options: "i" } }).exec();
       if (products) resolve(products);
     } catch (err) {
       reject(err.toString());
