@@ -5,7 +5,7 @@ const add_post = function (req, res) {
     try {
       const postLength = await Post.find().exec();
       const newPost = await Post.create({
-        id: postLength.length++,
+        id: ++postLength.length,
         title: req.body.title,
         body: req.body.body,
         userId: req.body.userId,

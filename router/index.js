@@ -7,4 +7,6 @@ module.exports = (app) => {
   app.use("/comments", require("./routes/commentsRoutes")());
   app.use("/products", require("./routes/productsRoutes")());
   app.use("/quotes", require("./routes/quotesRoutes")());
+  app.use("/notifications", require("./routes/notificationsRoutes")());
+  app.use("/todos", require("./routes/todosRoutes")());
 };
