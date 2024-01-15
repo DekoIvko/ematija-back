@@ -2,6 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const connectDB = require("./config/dbConn");
 const app = require("./app");
+const io = require("./socket");
 
 // connect to MongoDB
 connectDB();
@@ -10,6 +11,14 @@ connectDB();
 app.get("/", (req, res) => {
   res.send("app is running");
   // for test
+});
+
+// for test sockets running
+io.on("connection", (socket) => {
+  console.log(`Sockets is running ${socket.id}`);
+  io.on("notifications", (data) => {
+    console.log(data);
+  });
 });
 
 app.all("*", (req, res) => {

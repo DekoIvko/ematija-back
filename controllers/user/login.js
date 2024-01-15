@@ -30,8 +30,11 @@ const login = function (req, res) {
           const data = {
             id: result.id,
             email: result.email,
+            username: result.username,
             firstName: result.firstName,
             lastName: result.lastName,
+            birthDate: result.birthDate,
+            gender: result.gender,
             image: result.image,
             accessToken,
           };

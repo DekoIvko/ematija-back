@@ -6,6 +6,7 @@ const notificationSchema = new Schema({
   type: String,
   fromUserId: Number,
   toUserId: Number,
+  timestamp: String,
   title: String,
   body: String,
 });

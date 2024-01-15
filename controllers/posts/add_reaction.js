@@ -6,15 +6,17 @@ const add_reaction = function (req, res) {
       const newReaction = { reaction: req.body.reaction, userId: req.body.userId };
       const post = await Post.findOne({ id: req.body.postId }).exec();
       const indexReaction = post.reactions.map((reaction) => reaction.userId).indexOf(req.body.userId);
-
+      let added = "";
       if (indexReaction >= 0) {
         post.reactions.splice(indexReaction, 1);
+        added = "removed";
       } else {
         post.reactions.push(newReaction);
+        added = "added";
       }
       post.save();
 
-      resolve({ message: "Successfully react!", data: post, status: 200 });
+      resolve({ message: "Successfully react!", data: { post, added }, status: 200 });
     } catch (err) {
       reject(err.toString());
     }

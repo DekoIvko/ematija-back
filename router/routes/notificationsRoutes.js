@@ -15,7 +15,7 @@ module.exports = () => {
     get_notifications.ServiceCall(req, res);
   });
 
-  app.get("/add", verifyJWT, (req, res) => {
+  app.post("/add", verifyJWT, (req, res) => {
     add_notification.ServiceCall(req, res);
   });
 
