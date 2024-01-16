@@ -4,9 +4,8 @@ const { Server } = require("socket.io");
 const get_notifications = function (req, res) {
   return new Promise(async function (resolve, reject) {
     try {
-      console.log("notify");
       const param = await req?.query?.userId;
-      console.log("userId ", param);
+
       const notifications = await Notification.find({ toUserId: parseInt(param) }).exec();
       if (notifications) resolve(notifications.toReversed());
     } catch (err) {
