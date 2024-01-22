@@ -6,7 +6,7 @@ const messageSchema = new Schema({
   chatId: Number,
   senderId: Number,
   timestamp: String,
-  text: String,
+  message: String,
 });
 
 module.exports = mongoose.model("Message", messageSchema);

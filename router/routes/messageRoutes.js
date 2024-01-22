@@ -5,6 +5,7 @@ const verifyJWT = require("../../middleware/verifyAuth");
 // controllers
 const get_messages = require("../../controllers/messages/get_messages");
 const add_message = require("../../controllers/messages/add_message");
+const check_chat = require("../../controllers/messages/check_chat");
 
 module.exports = () => {
   const app = express.Router();
@@ -17,6 +18,10 @@ module.exports = () => {
 
   app.post("/add", verifyJWT, (req, res) => {
     add_message.ServiceCall(req, res);
+  });
+
+  app.post("/chat", verifyJWT, (req, res) => {
+    check_chat.ServiceCall(req, res);
   });
 
   return app;
