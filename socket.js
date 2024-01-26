@@ -20,6 +20,20 @@ module.exports = (server) => {
 
   io.on("connection", (socket) => {
     console.log("connected ", socket.id);
+    // parse the cookies from the handshake headers (This is only possible if client has `withCredentials: true`)
+    // const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
+
+    // let token = cookies?.accessToken; // get the accessToken
+    // const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); // decode the token
+
+    // const user = await User.findById(decodedToken?._id).select(
+    //   "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
+    // );
+    // retrieve the user
+    // if (!user) {
+    //   throw new ApiError(401, "Un-authorized handshake. Token is invalid");
+    // }
+    // socket.user = user; // mount te user object to the socket
 
     socket.on("newUser", (data) => {
       addSocketUser(data?.id, socket.id);
@@ -31,7 +45,10 @@ module.exports = (server) => {
     });
 
     socket.on("messages", (data) => {
-      console.log("messages: " + socket.id);
+      console.log("messages data: " + JSON.stringify(data));
+      console.log("messages data: " + data.message);
+      const socketUser = getSocketUser(data?.senderId); // change to receiver id
+      if (socketUser) io.to(socketUser.socketId).emit("messages", data);
     });
 
     socket.on("disconnect", () => {

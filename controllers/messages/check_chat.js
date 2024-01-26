@@ -31,7 +31,7 @@ const check_chat = function (req, res) {
       const returnChat = checkChat ? checkChat : newChat;
       const user = await User.findOne({ id: senderIdTwo }).exec();
       const messages = await get_messages(returnChat.id);
-      console.log(messages);
+      // console.log(messages);
       const chat = {
         id: returnChat.id,
         senderIdOne: returnChat.senderIdOne,
